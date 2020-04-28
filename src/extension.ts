@@ -1,16 +1,16 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
-import * as path from 'path';
+import * as vscode from 'vscode'
+import * as path from 'path'
 import * as fs from 'fs'
-import * as cp from 'child_process';
+import * as cp from 'child_process'
 import { promisify } from 'util'
 
 export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerDocumentFormattingEditProvider('php', {
       provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
-        const config = vscode.workspace.getConfiguration('php-formatter');
-        const folder = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath;
+        const config = vscode.workspace.getConfiguration('php-formatter')
+        const folder = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath
 
         const pluginSettings = {
           config: config.get<String>('configPath')?.replace('${workspaceFolder}', folder ?? ''),
@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
           })
         }
 
-        return [];
+        return []
       }
   })
 }

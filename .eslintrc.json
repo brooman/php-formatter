@@ -10,10 +10,9 @@
     ],
     "rules": {
         "@typescript-eslint/class-name-casing": "warn",
-        "@typescript-eslint/semi": "warn",
+        "@typescript-eslint/semi": [2, "never"],
         "curly": "warn",
         "eqeqeq": "warn",
-        "no-throw-literal": "warn",
-        "semi": "off"
+        "no-throw-literal": "warn"
     }
 }
