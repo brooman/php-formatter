@@ -1,26 +1,42 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs'
+import * as cp from 'child_process';
+import { promisify } from 'util'
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    vscode.languages.registerDocumentFormattingEditProvider('php', {
+      provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+        const config = vscode.workspace.getConfiguration('php-formatter');
+        const folder = vscode.workspace.getWorkspaceFolder(document.uri)?.uri.fsPath;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "php-formatter" is now active!');
+        const pluginSettings = {
+          config: config.get<String>('configPath')?.replace('${workspaceFolder}', folder ?? ''),
+          executable: config.get<String>('executablePath')?.replace('${workspaceFolder}', folder ?? '')
+        }
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('php-formatter.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
+        if (pluginSettings.executable) {
+          const cfg = pluginSettings.config ? `--config=${pluginSettings.config}` : ''
+          const cmd = `php ${pluginSettings.executable} fix ${cfg} ${document.fileName}`
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from php-formatter!');
-	});
+          cp.exec(cmd, err => {
+            if (err) {
+              throw err
+            }
 
-	context.subscriptions.push(disposable);
+            document.save().then(err => {
+              if (err) {
+                throw err
+              }
+            })
+          })
+        }
+
+        return [];
+      }
+  })
 }
 
 // this method is called when your extension is deactivated

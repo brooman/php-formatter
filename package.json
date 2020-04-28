@@ -9,18 +9,38 @@
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [
-		"onCommand:php-formatter.helloWorld"
-	],
+  "activationEvents": [
+    "onLanguage:php"
+],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "php-formatter.helloWorld",
-				"title": "Hello World"
-			}
-		]
-	},
+    "languages": [
+      {
+          "id": "php",
+          "aliases": [],
+          "extensions": [
+              "php"
+          ]
+      }
+    ],
+		"commands": []
+  },
+  "configuration": {
+    "title": "PHP Formatter",
+    "type": "object",
+    "properties": {
+      "php-formatter.executablePath": {
+        "type": "string",
+        "default": "${workspaceFolder}/vendor/bin/php-cs-fixer",
+        "description": "Points to the php-cs-fixer exectuable, example: \"${workspaceFolder}/vendor/bin/php-cs-fixer\""
+      },
+      "php-formatter.configPath": {
+        "type": "string",
+        "default": "${workspaceFolder}/.php_cs",
+        "description": "Points to the php-cs-fixer config, example: \"${workspaceFolder}/.php_cs\""
+      }
+    }
+  },
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
